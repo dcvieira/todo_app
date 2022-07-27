@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:todo_app/models/app_state.dart';
 import 'package:todo_app/models/todo.dart';
 import 'package:todo_app/pages/add_edit_page.dart';
 import 'package:todo_app/pages/home_page.dart';
+import 'package:todo_app/provider/todo_list_provider.dart';
 import 'package:todo_app/repository/local_storage_repository.dart';
 import 'package:todo_app/repository/todos_repository.dart';
 import 'package:todo_app/theme/todo_theme.dart';
@@ -43,24 +45,21 @@ class _TodoAppState extends State<TodoApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Todo App',
-      theme: TodoAppTheme.theme,
-      routes: {
-        "/": (context) {
-          return HomePage(
-            appState: appState,
-            updateTodo: updateTodo,
-            addTodo: addTodo,
-            removeTodo: removeTodo,
-            toggleAll: toggleAll,
-            clearCompleted: clearCompleted,
-          );
+    return ChangeNotifierProvider(
+      create: (_) =>
+          TodoListProvider(repository: widget.repository)..loadTodos(),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Todo App',
+        theme: TodoAppTheme.theme,
+        routes: {
+          "/": (context) {
+            return HomePage();
+          },
+          '/addTodo': (context) =>
+              AddEditPage(addTodo: addTodo, updateTodo: updateTodo)
         },
-        '/addTodo': (context) =>
-            AddEditPage(addTodo: addTodo, updateTodo: updateTodo)
-      },
+      ),
     );
   }
 

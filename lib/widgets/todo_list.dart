@@ -3,46 +3,37 @@
 // in the LICENSE file.
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:todo_app/models/todo.dart';
 import 'package:todo_app/pages/details_page.dart';
+import 'package:todo_app/provider/todo_list_provider.dart';
 import 'package:todo_app/util/app_keys.dart';
 import 'package:todo_app/widgets/todo_item.dart';
 
 import '../models/typedefs.dart';
 
 class TodoList extends StatelessWidget {
-  final List<Todo> filteredTodos;
-  final bool loading;
-  final TodoAdder addTodo;
-  final TodoRemover removeTodo;
-  final TodoUpdater updateTodo;
-
-  const TodoList({
-    required this.filteredTodos,
-    required this.loading,
-    required this.addTodo,
-    required this.removeTodo,
-    required this.updateTodo,
-  }) : super(key: AppKeys.todoList);
+  const TodoList() : super(key: AppKeys.todoList);
 
   @override
   Widget build(BuildContext context) {
+    final todoProvider = context.watch<TodoListProvider>();
     return Container(
-      child: loading
+      child: todoProvider.isLoading
           ? const Center(
               child: CircularProgressIndicator(
               key: AppKeys.todosLoading,
             ))
           : ListView.builder(
               key: AppKeys.todoList,
-              itemCount: filteredTodos.length,
+              itemCount: todoProvider.filteredTodos.length,
               itemBuilder: (BuildContext context, int index) {
-                final todo = filteredTodos[index];
+                final todo = todoProvider.filteredTodos[index];
 
                 return TodoItem(
                   todo: todo,
                   onDismissed: (direction) {
-                    _removeTodo(context, todo);
+                    todoProvider.removeTodo(todo);
                   },
                   onTap: () {
                     Navigator.of(context).push(
@@ -59,7 +50,8 @@ class TodoList extends StatelessWidget {
                     );
                   },
                   onCheckboxChanged: (complete) {
-                    updateTodo(todo, complete: !todo.complete);
+                    todoProvider
+                        .updateTodo(todo.copyWith(complete: !todo.complete));
                   },
                 );
               },

@@ -45,4 +45,13 @@ class Todo {
       complete: json['complete'] as bool,
     );
   }
+
+  Todo copyWith({String? task, bool? complete, String? note, String? id}) {
+    return Todo(
+      task ?? this.task,
+      complete: complete ?? this.complete,
+      note: note ?? this.note,
+      id: id ?? this.id,
+    );
+  }
 }

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:todo_app/models/app_state.dart';
 import 'package:todo_app/models/enums.dart';
 import 'package:todo_app/models/typedefs.dart';
+import 'package:todo_app/provider/todo_list_provider.dart';
 import 'package:todo_app/util/app_keys.dart';
 import 'package:todo_app/widgets/extra_actions_button.dart';
 import 'package:todo_app/widgets/filter_button.dart';
@@ -9,21 +11,7 @@ import 'package:todo_app/widgets/stats_counter.dart';
 import 'package:todo_app/widgets/todo_list.dart';
 
 class HomePage extends StatefulWidget {
-  final AppState appState;
-  final TodoAdder addTodo;
-  final TodoRemover removeTodo;
-  final TodoUpdater updateTodo;
-  final Function toggleAll;
-  final Function clearCompleted;
-
-  const HomePage({
-    required this.appState,
-    required this.addTodo,
-    required this.removeTodo,
-    required this.updateTodo,
-    required this.toggleAll,
-    required this.clearCompleted,
-  }) : super(key: AppKeys.homeScreen);
+  const HomePage() : super(key: AppKeys.homeScreen);
 
   @override
   State<StatefulWidget> createState() {
@@ -58,27 +46,11 @@ class HomePageState extends State<HomePage> {
             activeFilter: activeFilter,
             onSelected: _updateVisibility,
           ),
-          ExtraActionsButton(
-            allComplete: widget.appState.allComplete,
-            hasCompletedTodos: widget.appState.hasCompletedTodos,
-            onSelected: (action) {
-              if (action == ExtraAction.toggleAllComplete) {
-                widget.toggleAll();
-              } else if (action == ExtraAction.clearCompleted) {
-                widget.clearCompleted();
-              }
-            },
-          )
+          const ExtraActionsButton()
         ],
       ),
       body: activeTab == AppTab.todos
-          ? TodoList(
-              filteredTodos: widget.appState.filteredTodos(activeFilter),
-              loading: widget.appState.isLoading,
-              removeTodo: widget.removeTodo,
-              addTodo: widget.addTodo,
-              updateTodo: widget.updateTodo,
-            )
+          ? TodoList()
           : StatsCounter(
               numActive: widget.appState.numActive,
               numCompleted: widget.appState.numCompleted,
