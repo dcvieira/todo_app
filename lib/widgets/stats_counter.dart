@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:todo_app/provider/todo_list_provider.dart';
 import 'package:todo_app/util/app_keys.dart';
 
 class StatsCounter extends StatelessWidget {
-  final int numActive;
-  final int numCompleted;
-
-  const StatsCounter({required this.numActive, required this.numCompleted})
-      : super(key: AppKeys.statsCounter);
+  const StatsCounter() : super(key: AppKeys.statsCounter);
 
   @override
   Widget build(BuildContext context) {
@@ -23,10 +21,14 @@ class StatsCounter extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.only(bottom: 24.0),
-            child: Text(
-              '$numCompleted',
-              key: AppKeys.statsNumCompleted,
-              style: Theme.of(context).textTheme.subtitle1,
+            child: Consumer<TodoListProvider>(
+              builder: (context, todoList, child) {
+                return Text(
+                  '${todoList.numCompleted}',
+                  key: AppKeys.statsNumCompleted,
+                  style: Theme.of(context).textTheme.subtitle1,
+                );
+              },
             ),
           ),
           Padding(
@@ -38,10 +40,14 @@ class StatsCounter extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.only(bottom: 24.0),
-            child: Text(
-              '$numActive',
-              key: AppKeys.statsNumActive,
-              style: Theme.of(context).textTheme.subtitle1,
+            child: Consumer<TodoListProvider>(
+              builder: (context, todoList, child) {
+                return Text(
+                  '${todoList.numActive}',
+                  key: AppKeys.statsNumActive,
+                  style: Theme.of(context).textTheme.subtitle1,
+                );
+              },
             ),
           )
         ],

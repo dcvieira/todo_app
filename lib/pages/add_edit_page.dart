@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:todo_app/models/todo.dart';
-import 'package:todo_app/models/typedefs.dart';
+import 'package:todo_app/provider/todo_list_provider.dart';
 import 'package:todo_app/util/app_keys.dart';
 
 class AddEditPage extends StatefulWidget {
   final Todo? todo;
-  final TodoAdder addTodo;
-  final TodoUpdater updateTodo;
 
   const AddEditPage({
     Key? key,
-    required this.addTodo,
-    required this.updateTodo,
     this.todo,
   }) : super(key: key ?? AppKeys.addTodoScreen);
 
@@ -34,7 +31,7 @@ class _AddEditPageState extends State<AddEditPage> {
         ),
       ),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Form(
           key: formKey,
           onWillPop: () {
@@ -81,16 +78,12 @@ class _AddEditPageState extends State<AddEditPage> {
             if (form!.validate()) {
               form.save();
 
-              final task = _task;
-              final note = _note;
-
+              final todoProvider = context.read<TodoListProvider>();
               if (isEditing) {
-                widget.updateTodo(widget.todo!, task: task!, note: note!);
+                todoProvider.updateTodo(
+                    widget.todo!.copyWith(task: _task, note: _note));
               } else {
-                widget.addTodo(Todo(
-                  task!,
-                  note: note!,
-                ));
+                todoProvider.addTodo(Todo(_task!, note: _note ?? ''));
               }
 
               Navigator.pop(context);

@@ -53,11 +53,8 @@ class _TodoAppState extends State<TodoApp> {
         title: 'Todo App',
         theme: TodoAppTheme.theme,
         routes: {
-          "/": (context) {
-            return HomePage();
-          },
-          '/addTodo': (context) =>
-              AddEditPage(addTodo: addTodo, updateTodo: updateTodo)
+          "/": (context) => const HomePage(),
+          '/addTodo': (context) => const AddEditPage()
         },
       ),
     );

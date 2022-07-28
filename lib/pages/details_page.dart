@@ -1,24 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:todo_app/models/todo.dart';
-import 'package:todo_app/models/typedefs.dart';
 import 'package:todo_app/pages/add_edit_page.dart';
+import 'package:todo_app/provider/todo_list_provider.dart';
 import 'package:todo_app/util/app_keys.dart';
 
 class DetailPage extends StatelessWidget {
-  final Todo todo;
+  final String todoId;
   final Function onDelete;
-  final TodoAdder addTodo;
-  final TodoUpdater updateTodo;
-
   const DetailPage({
-    required this.todo,
-    required this.addTodo,
-    required this.updateTodo,
+    required this.todoId,
     required this.onDelete,
   }) : super(key: AppKeys.todoDetailsScreen);
 
   @override
   Widget build(BuildContext context) {
+    final todoProvider = context.watch<TodoListProvider>();
+    final todo = todoProvider.todoById(todoId);
+    if (todo == null) {
+      return Container();
+    }
     return Scaffold(
       appBar: AppBar(
         title: const Text('Todo Details'),
@@ -46,8 +47,10 @@ class DetailPage extends StatelessWidget {
                   child: Checkbox(
                     value: todo.complete,
                     key: AppKeys.detailsTodoItemCheckbox,
-                    onChanged: (complete) {
-                      updateTodo(todo, complete: !todo.complete);
+                    onChanged: (_) {
+                      context
+                          .read<TodoListProvider>()
+                          .updateTodo(todo.copyWith(complete: !todo.complete));
                     },
                   ),
                 ),
@@ -80,7 +83,7 @@ class DetailPage extends StatelessWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        tooltip: 'Delete Todo',
+        tooltip: 'Edit Todo',
         key: AppKeys.editTodoFab,
         onPressed: () {
           Navigator.of(context).push(
@@ -88,8 +91,6 @@ class DetailPage extends StatelessWidget {
               builder: (context) {
                 return AddEditPage(
                   key: AppKeys.editTodoScreen,
-                  updateTodo: updateTodo,
-                  addTodo: addTodo,
                   todo: todo,
                 );
               },

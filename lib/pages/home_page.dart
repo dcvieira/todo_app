@@ -49,12 +49,7 @@ class HomePageState extends State<HomePage> {
           const ExtraActionsButton()
         ],
       ),
-      body: activeTab == AppTab.todos
-          ? TodoList()
-          : StatsCounter(
-              numActive: widget.appState.numActive,
-              numCompleted: widget.appState.numCompleted,
-            ),
+      body: activeTab == AppTab.todos ? TodoList() : StatsCounter(),
       floatingActionButton: FloatingActionButton(
         key: AppKeys.addTodoFab,
         onPressed: () {

@@ -10,8 +10,6 @@ import 'package:todo_app/provider/todo_list_provider.dart';
 import 'package:todo_app/util/app_keys.dart';
 import 'package:todo_app/widgets/todo_item.dart';
 
-import '../models/typedefs.dart';
-
 class TodoList extends StatelessWidget {
   const TodoList() : super(key: AppKeys.todoList);
 
@@ -33,17 +31,15 @@ class TodoList extends StatelessWidget {
                 return TodoItem(
                   todo: todo,
                   onDismissed: (direction) {
-                    todoProvider.removeTodo(todo);
+                    _removeTodo(context, todo);
                   },
                   onTap: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (_) {
                           return DetailPage(
-                            todo: todo,
+                            todoId: todo.id!,
                             onDelete: () => _removeTodo(context, todo),
-                            addTodo: addTodo,
-                            updateTodo: updateTodo,
                           );
                         },
                       ),
@@ -60,7 +56,7 @@ class TodoList extends StatelessWidget {
   }
 
   void _removeTodo(BuildContext context, Todo todo) {
-    removeTodo(todo);
+    context.read<TodoListProvider>().removeTodo(todo);
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -74,7 +70,7 @@ class TodoList extends StatelessWidget {
         action: SnackBarAction(
           label: 'Undo',
           onPressed: () {
-            addTodo(todo);
+            context.read<TodoListProvider>().addTodo(todo);
           },
         ),
       ),

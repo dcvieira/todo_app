@@ -24,6 +24,12 @@ class TodoListProvider extends ChangeNotifier {
 
   VisibilityFilter get filter => _filter;
 
+  int get numActive =>
+      todos.where((Todo todo) => !todo.complete).toList().length;
+
+  int get numCompleted =>
+      todos.where((Todo todo) => todo.complete).toList().length;
+
   List<Todo> get filteredTodos {
     return _todos.where((todo) {
       switch (filter) {
@@ -36,6 +42,14 @@ class TodoListProvider extends ChangeNotifier {
           return true;
       }
     }).toList();
+  }
+
+  Todo? todoById(String id) {
+    final todos = _todos.where((it) => it.id == id);
+    if (todos.isNotEmpty) {
+      return todos.elementAt(0);
+    }
+    return null;
   }
 
   // Setter
@@ -55,6 +69,12 @@ class TodoListProvider extends ChangeNotifier {
 
   void clearCompleted() {
     _todos.removeWhere((todo) => todo.complete);
+    notifyListeners();
+    _saveTodos();
+  }
+
+  void addTodo(Todo todo) {
+    _todos.add(todo);
     notifyListeners();
     _saveTodos();
   }
