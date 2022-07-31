@@ -30,7 +30,7 @@ class LocalStorageRepository implements TodosRepository {
     final store = await loadStore();
     return json
         .decode(store.getString(_key) ?? '')['todos']
-        .cast<Map<String, Object>>()
+        .cast<Map<String, dynamic>>()
         .map<Todo>(Todo.fromJson)
         .toList();
   }

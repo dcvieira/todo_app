@@ -1,18 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:todo_app/models/enums.dart';
+import 'package:todo_app/provider/todo_list_provider.dart';
 import 'package:todo_app/util/app_keys.dart';
 
 class FilterButton extends StatelessWidget {
-  final PopupMenuItemSelected<VisibilityFilter> onSelected;
-  final VisibilityFilter activeFilter;
   final bool isActive;
 
-  const FilterButton(
-      {required this.onSelected,
-      required this.activeFilter,
-      required this.isActive,
-      Key? key})
-      : super(key: key);
+  const FilterButton({required this.isActive, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -22,8 +17,6 @@ class FilterButton extends StatelessWidget {
         .bodyText1!
         .copyWith(color: Theme.of(context).colorScheme.secondary);
     final button = _Button(
-      onSelected: onSelected,
-      activeFilter: activeFilter,
       activeStyle: activeStyle,
       defaultStyle: defaultStyle!,
     );
@@ -39,30 +32,28 @@ class FilterButton extends StatelessWidget {
 class _Button extends StatelessWidget {
   const _Button({
     Key? key,
-    required this.onSelected,
-    required this.activeFilter,
     required this.activeStyle,
     required this.defaultStyle,
   }) : super(key: key);
 
-  final PopupMenuItemSelected<VisibilityFilter> onSelected;
-  final VisibilityFilter activeFilter;
   final TextStyle activeStyle;
   final TextStyle defaultStyle;
 
   @override
   Widget build(BuildContext context) {
+    final todoProvider = context.watch<TodoListProvider>();
     return PopupMenuButton<VisibilityFilter>(
       key: AppKeys.filterButton,
       tooltip: 'Filter Todos',
-      onSelected: onSelected,
+      initialValue: todoProvider.filter,
+      onSelected: (filter) => todoProvider.filter = filter,
       itemBuilder: (BuildContext context) => <PopupMenuItem<VisibilityFilter>>[
         PopupMenuItem<VisibilityFilter>(
           key: AppKeys.allFilter,
           value: VisibilityFilter.all,
           child: Text(
             'Show All',
-            style: activeFilter == VisibilityFilter.all
+            style: todoProvider.filter == VisibilityFilter.all
                 ? activeStyle
                 : defaultStyle,
           ),
@@ -72,7 +63,7 @@ class _Button extends StatelessWidget {
           value: VisibilityFilter.active,
           child: Text(
             'Show Active',
-            style: activeFilter == VisibilityFilter.active
+            style: todoProvider.filter == VisibilityFilter.active
                 ? activeStyle
                 : defaultStyle,
           ),
@@ -82,7 +73,7 @@ class _Button extends StatelessWidget {
           value: VisibilityFilter.completed,
           child: Text(
             'Show Completed',
-            style: activeFilter == VisibilityFilter.completed
+            style: todoProvider.filter == VisibilityFilter.completed
                 ? activeStyle
                 : defaultStyle,
           ),

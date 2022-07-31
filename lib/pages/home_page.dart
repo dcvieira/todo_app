@@ -20,14 +20,7 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
-  VisibilityFilter activeFilter = VisibilityFilter.all;
   AppTab activeTab = AppTab.todos;
-
-  void _updateVisibility(VisibilityFilter filter) {
-    setState(() {
-      activeFilter = filter;
-    });
-  }
 
   void _updateTab(AppTab tab) {
     setState(() {
@@ -43,8 +36,6 @@ class HomePageState extends State<HomePage> {
         actions: [
           FilterButton(
             isActive: activeTab == AppTab.todos,
-            activeFilter: activeFilter,
-            onSelected: _updateVisibility,
           ),
           const ExtraActionsButton()
         ],
