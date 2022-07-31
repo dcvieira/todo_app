@@ -37,7 +37,7 @@ class Todo {
     };
   }
 
-  static Todo fromJson(Map<String, Object> json) {
+  static Todo fromJson(Map<String, dynamic> json) {
     return Todo(
       json['task'] as String,
       id: json['id'] as String,

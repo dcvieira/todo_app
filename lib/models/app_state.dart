@@ -4,12 +4,14 @@ import 'enums.dart';
 
 class AppState {
   bool isLoading;
-  List<Todo> todos;
+  late List<Todo> todos;
 
   AppState({
     this.isLoading = false,
-    this.todos = const [],
-  });
+    List<Todo>? todos,
+  }) {
+    this.todos = todos ?? List.empty(growable: true);
+  }
 
   factory AppState.loading() => AppState(isLoading: true);
 
