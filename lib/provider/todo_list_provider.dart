@@ -23,7 +23,7 @@ class TodoListProvider extends ChangeNotifier {
   }
 
   void addTodo(Todo todo) {
-    // Cadastrar Todo
+    _todos.add(todo);
   }
 
   void removeTodo(Todo todo) {
