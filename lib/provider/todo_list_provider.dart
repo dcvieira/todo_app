@@ -26,10 +26,6 @@ class TodoListProvider extends ChangeNotifier {
     _todos.add(todo);
   }
 
-  void removeTodo(Todo todo) {
-    _todos.removeWhere((it) => it.id == todo.id);
-  }
-
   void updateTodo(Todo todo) {
     var oldTodo = _todos.firstWhere((it) => it.id == todo.id);
     var replaceIndex = _todos.indexOf(oldTodo);

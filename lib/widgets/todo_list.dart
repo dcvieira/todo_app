@@ -18,35 +18,10 @@ class TodoList extends StatelessWidget {
 
           // return TodoItem(
           //   todo: todo,
-          //   onDismissed: (direction) {
-          //     _removeTodo(context, todo);
-          //   },
           //   onCheckboxChanged: (complete) {
-          //     Atualizar todo
           //   },
           // );
         },
-      ),
-    );
-  }
-
-  void _removeTodo(BuildContext context, Todo todo) {
-    // Remover Todo Aqui
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        duration: const Duration(seconds: 2),
-        content: Text(
-          'Deleted "${todo.task}"',
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-        ),
-        action: SnackBarAction(
-          label: 'Undo',
-          onPressed: () {
-            // cadastrar Todo aqui
-          },
-        ),
       ),
     );
   }
