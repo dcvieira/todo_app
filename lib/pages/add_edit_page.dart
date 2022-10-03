@@ -2,15 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_app/models/todo.dart';
 import 'package:todo_app/provider/todo_list_provider.dart';
-import 'package:todo_app/util/app_keys.dart';
 
 class AddEditPage extends StatefulWidget {
-  final Todo? todo;
-
   const AddEditPage({
     Key? key,
-    this.todo,
-  }) : super(key: key ?? AppKeys.addTodoScreen);
+  }) : super(key: key);
 
   @override
   _AddEditPageState createState() => _AddEditPageState();
@@ -26,9 +22,7 @@ class _AddEditPageState extends State<AddEditPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          isEditing ? 'Edit Todo' : 'Edit Todo',
-        ),
+        title: const Text('Adicionar Todo'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -40,28 +34,18 @@ class _AddEditPageState extends State<AddEditPage> {
           child: ListView(
             children: [
               TextFormField(
-                initialValue: widget.todo != null ? widget.todo!.task : '',
-                key: AppKeys.taskField,
-                autofocus: isEditing ? false : true,
+                autofocus: true,
                 style: Theme.of(context).textTheme.headline5,
                 decoration: const InputDecoration(
-                  hintText: 'What needs to be done?',
+                  hintText: 'O que precisa ser feito?',
                 ),
-                validator: (val) {
-                  if (val == null || val.trim().isEmpty) {
-                    return 'Please enter some text';
-                  }
-                  return null;
-                },
                 onSaved: (value) => _task = value!,
               ),
               TextFormField(
-                initialValue: widget.todo != null ? widget.todo!.note : '',
-                key: AppKeys.noteField,
                 maxLines: 10,
                 style: Theme.of(context).textTheme.subtitle1,
                 decoration: const InputDecoration(
-                  hintText: 'Additional Notes...',
+                  hintText: 'Notas adicionais...',
                 ),
                 onSaved: (value) => _note = value ?? '',
               )
@@ -70,27 +54,21 @@ class _AddEditPageState extends State<AddEditPage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-          key: isEditing ? AppKeys.saveTodoFab : AppKeys.saveNewTodo,
-          tooltip: isEditing ? 'Save changes' : 'Edit Todo',
-          child: Icon(isEditing ? Icons.check : Icons.add),
-          onPressed: () {
-            final form = formKey.currentState;
-            if (form!.validate()) {
-              form.save();
+        tooltip: 'Salvar',
+        child: const Icon(Icons.add),
+        onPressed: () {
+          final form = formKey.currentState;
+          if (form!.validate()) {
+            form.save();
 
-              final todoProvider = context.read<TodoListProvider>();
-              if (isEditing) {
-                todoProvider.updateTodo(
-                    widget.todo!.copyWith(task: _task, note: _note));
-              } else {
-                todoProvider.addTodo(Todo(_task!, note: _note ?? ''));
-              }
+            // Todo 2 - Cadastar Todo
+            print(_task);
+            print(_note);
 
-              Navigator.pop(context);
-            }
-          }),
+            Navigator.pop(context);
+          }
+        },
+      ),
     );
   }
-
-  bool get isEditing => widget.todo != null;
 }

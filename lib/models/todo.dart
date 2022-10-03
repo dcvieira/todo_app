@@ -28,24 +28,6 @@ class Todo {
     return 'Todo{complete: $complete, task: $task, note: $note, id: $id}';
   }
 
-  Map<String, Object> toJson() {
-    return {
-      'complete': complete,
-      'task': task,
-      'note': note,
-      'id': id ?? '',
-    };
-  }
-
-  static Todo fromJson(Map<String, dynamic> json) {
-    return Todo(
-      json['task'] as String,
-      id: json['id'] as String,
-      note: json['note'] as String,
-      complete: json['complete'] as bool,
-    );
-  }
-
   Todo copyWith({String? task, bool? complete, String? note, String? id}) {
     return Todo(
       task ?? this.task,
